@@ -110,9 +110,10 @@ print(f'(Part 1) Size: {total_size}')
 
 # Part 2
 total_used = tree.get_size()
-needed_size = total_used - 30000000
+total_free = 70000000 - total_used
+needed_size = 30000000 - total_free
 
-print(f'Filesystem has {total_used} of used space. Need to free at least {needed_size} more.')
+print(f'  Filesystem has {total_used} of used space. Need to free at least {needed_size} more.')
 
 smallest_size = total_used
 
