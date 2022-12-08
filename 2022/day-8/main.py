@@ -82,16 +82,6 @@ def calc_scenic_score(r, c):
 
     return u * l * d * ri
 
-r = 1
-c = 1
-print(r, c, calc_scenic_score(r, c))
-r = 1
-c = 10
-print(r, c, calc_scenic_score(r, c))
-r = 12
-c = 30
-print(r, c, calc_scenic_score(r, c))
-
 max_score = 0
 for r in range(99):
     for c in range(99):
