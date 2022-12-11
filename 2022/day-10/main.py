@@ -17,7 +17,7 @@ def clock_cycle():
     if (cycle-1)%40 == 0:
         print()
 
-    if X - 1 <= (cycle-1)%40 + 1 <= X + 1:
+    if X  <= (cycle-1)%40 + 1 <= X + 2:
         print('#', end='')
     else:
         print('.', end='')
