@@ -13,50 +13,43 @@ for r in range(rows):
         if data[r][c] == ord('S'):
             start_pos = (r, c)
             data[r][c] = ord('a')
-        elif dara[r][c] == ord('E'):
+        elif data[r][c] == ord('E'):
             end_pos = (r, c)
             data[r][c] = ord('z')
 
-# Find the shortest path
-steps = 0
-cur_pos = start_pos
-stack = [start_pos]
-path_lengths = []
-while len(visited) > rows * cols:
-    r, c = cur_pos
-    cur_point = data[r][c]
-
-    if cur_pos == end_pos:
-        path_lengths.append()
-
-    # Aggregate the possible next points
-    if r > 0 and test_pos(r-1, c):
-        continue
-    elif r < rows - 1 and test_pos(r+1, c):
-        continue
-    elif c > 0 and test_pos(r, c-1):
-        continue
-    elif c < cols - 1 and test_pos(r, c+1):
-        continue
-    else:
-        # Time to pop from the stack
-        stack.pop()
-        cur_pos = stack[-1]
-        steps -= 1
-
-def test_pos(r, c):
+def test_pos(cur_point, r, c):
     # Probably not the best way to do this?
     global data
     global visited
-    global stack
-    global cur_pos
-    global cur_point
     next_pos = (r, c)
-    next_point = data[r, c]
-    if next_point <= cur_point + 1 and next_pos not in visited:
-        stack.append(next_point)
-        visited.append(next_point)
-        steps += 1
-        cur_pos = next_pos
+    if data[r][c] <= cur_point + 1 and next_pos not in visited:
+        visited.append(next_pos)
         return True
     return False
+
+# Find the shortest path
+steps = 0
+path_lengths = []
+
+def step(cur_pos, steps):
+    global path_lengths
+    if cur_pos == end_pos:
+        path_lengths.append(steps)
+    
+    r, c = cur_pos
+    cur_point = data[r][c]
+
+    # Aggregate the possible next points
+    if r > 0 and test_pos(cur_point, r-1, c):
+        step((r-1, c), steps+1)
+    if r < rows - 1 and test_pos(cur_point, r+1, c):
+        step((r+1, c), steps+1)
+    if c > 0 and test_pos(cur_point, r, c-1):
+        step((r, c-1), steps+1)
+    if c < cols - 1 and test_pos(cur_point, r, c+1):
+        step((r, c+1), steps+1)
+
+step(start_pos, 0)
+
+print(path_lengths)
+print(max(path_lengths))
