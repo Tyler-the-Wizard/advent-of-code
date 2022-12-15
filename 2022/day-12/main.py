@@ -5,8 +5,6 @@ data = [[ord(ch) for ch in line] for line in data if len(line) > 0]
 rows = len(data)
 cols = len(data[0])
 
-visited = []
-
 # Pull out S and E
 for r in range(rows):
     for c in range(cols):
@@ -17,39 +15,41 @@ for r in range(rows):
             end_pos = (r, c)
             data[r][c] = ord('z')
 
-def test_pos(cur_point, r, c):
-    # Probably not the best way to do this?
-    global data
-    global visited
-    next_pos = (r, c)
-    if data[r][c] <= cur_point + 1 and next_pos not in visited:
-        visited.append(next_pos)
-        return True
-    return False
+from random import choice
+LIMIT = 20000
+def find_path():
+    r, c = start_pos
+    num_steps = 0
+    while (r, c) != end_pos:
+        valid_pos = []
+        # up
+        if r > 0 and data[r-1][c] <= data[r][c] + 1:
+            valid_pos.append((r-1, c))
+        # right
+        if c < cols - 2 and data[r][c+1] <= data[r][c] + 1:
+            valid_pos.append((r, c+1))
+        # down
+        if r < rows - 2 and data[r+1][c] <= data[r][c] + 1:
+            valid_pos.append((r+1, c))
+        # left
+        if c > 0 and data[r][c-1] <= data[r][c] + 1:
+            valid_pos.append((r, c-1))
+
+        r, c = choice(valid_pos)
+        num_steps += 1
+
+        if num_steps > LIMIT:
+            return -1
+
+    return num_steps
 
 # Find the shortest path
-steps = 0
 path_lengths = []
 
-def step(cur_pos, steps):
-    global path_lengths
-    if cur_pos == end_pos:
-        path_lengths.append(steps)
-    
-    r, c = cur_pos
-    cur_point = data[r][c]
-
-    # Aggregate the possible next points
-    if r > 0 and test_pos(cur_point, r-1, c):
-        step((r-1, c), steps+1)
-    if r < rows - 1 and test_pos(cur_point, r+1, c):
-        step((r+1, c), steps+1)
-    if c > 0 and test_pos(cur_point, r, c-1):
-        step((r, c-1), steps+1)
-    if c < cols - 1 and test_pos(cur_point, r, c+1):
-        step((r, c+1), steps+1)
-
-step(start_pos, 0)
+for _ in range(100):
+    l = find_path()
+    if l != -1:
+        path_lengths.append(l)
 
 print(path_lengths)
-print(max(path_lengths))
+print(min(path_lengths))
